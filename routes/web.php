@@ -13,6 +13,9 @@ Route::group(['middleware' => ['guest']], function (){
     Route::match(['get', 'post'],'login', [AuthController::class, 'login'])->name('login');
 });
 
+Route::get('forget-password', [AuthController::class, 'forgetPassword'])->name('forget.password');
+Route::post('forget-password', [AuthController::class, 'forgetPasswordPost'])->name('forget.password.post');
+
 Route::group(['middleware' =>['auth']], function (){
     Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::match(['get','post'],'profile', [AuthController::class, 'profile'])->name('profile');

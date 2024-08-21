@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgotPasswordMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use function PHPUnit\Framework\dataSetAsStringWithData;
 use function Termwind\ValueObjects\inheritFromStyles;
 
 class AuthController extends Controller
@@ -107,6 +111,30 @@ class AuthController extends Controller
         }
         return view('auth.profile');
     }
+
+
+    //Forget password
+    public function forgetPassword()
+    {
+        return view('auth.forgetPassword');
+    }
+
+    public function forgetPasswordPost(Request $request)
+    {
+        $count = User::where('email', '=', $request->email)->count();
+        if ($count > 0)
+        {
+            $user = User::where('email', '=', $request->email)->first();
+            $user->remember_token = Str::random(50);
+            $user->save();
+            Mail::to($user->email)->send(new ForgotPasswordMail($user));
+            return redirect()->back()->with('success', 'Password has been reset');
+        }
+        else {
+            return redirect()->back()->with('error', 'Email Not Found in this system');
+        }
+    }
+
 
 
     // Logout

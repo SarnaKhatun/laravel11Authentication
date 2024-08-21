@@ -18,6 +18,9 @@
             <div class="error">{{$message}}</div>
             @enderror
         </div>
+             <a href="{{route('forget.password')}}">forget password</a>
+        <br>
+        <br>
         <div class="form-group">
             <button type="submit">Login</button>
         </div>
